@@ -17,5 +17,5 @@ public class CategoriaService {
 	public Categoria find(Integer id) {
 		Optional<Categoria> obj = categoriaRepository.findById(id);
 		return obj.orElse(null);
-	}
+	} 
 }
