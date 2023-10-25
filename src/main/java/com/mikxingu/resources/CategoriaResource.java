@@ -26,4 +26,4 @@ public class CategoriaResource {
 				.ok()
 				.body(obj);
 	}
-}
+} 
