@@ -1,5 +1,6 @@
 package com.mikxingu;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +13,20 @@ import com.mikxingu.domain.Cidade;
 import com.mikxingu.domain.Cliente;
 import com.mikxingu.domain.Endereco;
 import com.mikxingu.domain.Estado;
+import com.mikxingu.domain.Pagamento;
+import com.mikxingu.domain.PagamentoComBoleto;
+import com.mikxingu.domain.PagamentoComCartao;
+import com.mikxingu.domain.Pedido;
 import com.mikxingu.domain.Produto;
+import com.mikxingu.domain.enums.EstadoPagamento;
 import com.mikxingu.domain.enums.TipoCliente;
 import com.mikxingu.repositories.CategoriaRepository;
 import com.mikxingu.repositories.CidadeRepository;
 import com.mikxingu.repositories.ClienteRepository;
 import com.mikxingu.repositories.EnderecoRepository;
 import com.mikxingu.repositories.EstadoRepository;
+import com.mikxingu.repositories.PagamentoRepository;
+import com.mikxingu.repositories.PedidoRepository;
 import com.mikxingu.repositories.ProdutoRepository;
 
 @SpringBootApplication
@@ -39,6 +47,12 @@ public class UmlsystemApplication implements CommandLineRunner {
 	
 	@Autowired 
 	private EnderecoRepository enderecoRepository;
+	
+	@Autowired
+	private PedidoRepository pedidoRepository;
+	
+	@Autowired
+	private PagamentoRepository pagamentoRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(UmlsystemApplication.class, args);
@@ -88,6 +102,19 @@ public class UmlsystemApplication implements CommandLineRunner {
 		clienteRepository.saveAll(Arrays.asList(cli1));
 		
 		enderecoRepository.saveAll(Arrays.asList(e1, e2));
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+		Pedido ped1 = new Pedido(null, sdf.parse("30/09/2017 10:32"), cli1, e1);
+		Pedido ped2 = new Pedido(null, sdf.parse("10/10/2017 19:35"), cli1, e2);
+		
+		Pagamento pgto1 = new PagamentoComCartao(null, EstadoPagamento.QUITADO, ped1, 6);
+		ped1.setPagamento(pgto1);
+		Pagamento pgto2 = new PagamentoComBoleto(null, EstadoPagamento.PENDENTE, ped2, sdf.parse("20/10/2017 00:00"), null);
+		ped2.setPagamento(pgto2);
+		
+		cli1.getPedidos().addAll(Arrays.asList(ped1, ped2));
+		
+		pedidoRepository.saveAll(Arrays.asList(ped1, ped2));
+		pagamentoRepository.saveAll(Arrays.asList(pgto1, pgto2));
 		
 	}
 
