@@ -3,6 +3,7 @@ package com.mikxingu.domain;
 import java.io.Serializable;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.mikxingu.domain.enums.EstadoPagamento;
 
 import jakarta.persistence.Entity;
@@ -26,6 +27,7 @@ public abstract class Pagamento implements Serializable {
 	@OneToOne
 	@JoinColumn(name = "pedido_id")
 	@MapsId
+	@JsonBackReference
 	private Pedido pedido;
 	
 	public Pagamento() {
